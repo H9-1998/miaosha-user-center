@@ -1,5 +1,6 @@
 package com.miaosha.usercenter.service;
 
+import com.alibaba.cloud.nacos.discovery.NacosDiscoveryClient;
 import com.miaosha.usercenter.dao.UserInfoDao;
 import com.miaosha.usercenter.dao.UserPasswordDao;
 import com.miaosha.usercenter.entity.UserInfo;
@@ -11,9 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -27,6 +31,8 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class UserService {
 
+
+
     @Autowired
     private UserInfoDao userInfoDao;
 
@@ -34,7 +40,10 @@ public class UserService {
     private UserPasswordDao userPasswordDao;
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate redisTemplate;            // redis操作类
+
+    @Autowired
+    private DiscoveryClient discoveryClient;        //服务发现组件
 
     /**
      * 登录
