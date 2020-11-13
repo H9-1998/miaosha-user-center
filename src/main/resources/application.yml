@@ -14,15 +14,16 @@ spring:
       pool:
         max-active: 20          #redis连接池最大数
         min-idle: 10            #redis连接池最小线程数
+    database: 0
   cloud:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848   #注册中心 ip:port
   application:
     name: user-center                 #服务名
-
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
   mapper-locations: classpath*:mapper/*.xml
-
+server:
+  port: 8081

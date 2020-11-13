@@ -64,12 +64,10 @@ public class UserController {
     @GetMapping("/login")
     @ApiOperation("登录接口")
     public CommonReturnType login(@RequestParam("telephone") String telephone, @RequestParam("password") String password) throws BusinessException {
-        UserModel userModel = userService.login(telephone, password);
-        if (userModel == null)
-            throw new BusinessException(EmBusinessError.LOGIN_ERROR);
+        String token = userService.login(telephone, password);
 
-        UserVO userVO = convertFromModel(userModel);
-        return CommonReturnType.create(userVO);
+        // 返回token
+        return CommonReturnType.create(token);
     }
 
     //    ----------------------------------------------------非业务方法-------------------------------------------------------------------

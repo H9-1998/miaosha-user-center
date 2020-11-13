@@ -1,6 +1,5 @@
 package com.miaosha.usercenter.service;
 
-import com.alibaba.cloud.nacos.discovery.NacosDiscoveryClient;
 import com.miaosha.usercenter.dao.UserInfoDao;
 import com.miaosha.usercenter.dao.UserPasswordDao;
 import com.miaosha.usercenter.entity.UserInfo;
@@ -16,9 +15,8 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 
@@ -43,7 +41,7 @@ public class UserService {
     private RedisTemplate redisTemplate;            // redis操作类
 
     @Autowired
-    private DiscoveryClient discoveryClient;        //服务发现组件
+    private DiscoveryClient discoveryClient;        //服务发现
 
     /**
      * 登录
@@ -52,7 +50,7 @@ public class UserService {
      * @return
      * @throws BusinessException
      */
-    public UserModel login(String telephone, String password) throws BusinessException {
+    public String login(String telephone, String password) throws BusinessException {
         // 判空
         if (StringUtils.isEmpty(telephone) || StringUtils.isEmpty(password))
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
@@ -66,10 +64,15 @@ public class UserService {
         UserInfo userInfo = userInfoDao.selectByTelephone(telephone);
         UserPassword userPassword = userPasswordDao.selectByUserId(userInfo.getId());
         if (!StringUtils.equals(password, userPassword.getEncryptPassword()))
+            // 密码错误
             throw new BusinessException(EmBusinessError.LOGIN_ERROR);
         UserModel userModel = convertFromDataObject(userInfo, userPassword);
 
-        return userModel;
+        // 登录成功 生成token 用户信息存入redis, 过期时间1小时
+        String token = UUID.randomUUID().toString().replace("-", "");
+        redisTemplate.opsForValue().set(token, userModel, 1, TimeUnit.HOURS);
+
+        return token;
     }
 
     /**
@@ -130,7 +133,7 @@ public class UserService {
             return null;
         UserModel userModel = new UserModel();
         BeanUtils.copyProperties(userInfo, userModel);
-        BeanUtils.copyProperties(userPassword, userInfo);
+        BeanUtils.copyProperties(userPassword, userModel);
         return userModel;
     }
 
