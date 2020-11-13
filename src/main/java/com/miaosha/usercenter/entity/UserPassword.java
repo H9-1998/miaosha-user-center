@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -18,6 +19,7 @@ import javax.persistence.Table;
 public class UserPassword {
 
     @Id
+    @GeneratedValue(generator = "JDBC")
     private Integer id;
 
     private String encryptPassword;

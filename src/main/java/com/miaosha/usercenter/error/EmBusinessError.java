@@ -9,6 +9,8 @@ public enum EmBusinessError implements CommonError {
     USER_NOT_EXIST(20001, "用户不存在"),
     LOGIN_ERROR(20002, "用户名或密码错误"),
     USER_NOT_LOGIN(20003, "用户未登陆"),
+    OTP_CODE_ERROR(20004, "验证码错误"),
+    HAS_BEEN_REGISTER(20005, "该手机号已被注册"),
 
     //30000 开头为商品信息相关错误定义
     ITEM_NOT_EXIST(30001, "商品不存在"),

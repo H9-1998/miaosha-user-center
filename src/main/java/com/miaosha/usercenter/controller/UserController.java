@@ -11,10 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @auhor: dhz
@@ -28,6 +25,34 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+
+    @GetMapping("/get-otpCode")
+    @ApiOperation("生成验证码")
+    public CommonReturnType getOtpCode(@RequestParam("telephone") String telephone) throws BusinessException {
+        userService.generateOtpCode(telephone);
+        return CommonReturnType.create("生成验证码成功");
+    }
+
+    @PostMapping("/register")
+    @ApiOperation("用户注册")
+    public CommonReturnType register(@RequestParam("telephone") String telephone,
+                                     @RequestParam("password") String password,
+                                     @RequestParam("gender") Integer gender,
+                                     @RequestParam("age") Integer age,
+                                     @RequestParam("name") String name,
+                                     @RequestParam("otpCode") String otpCode) throws BusinessException {
+        UserModel userModer = UserModel.builder()
+                .telephone(telephone)
+                .encryptPassword(password)
+                .gender(gender.byteValue())
+                .age(age)
+                .name(name)
+                .registerMode("byPhone")
+                .thirdPartyId("").build();
+        userService.register(userModer, otpCode);
+        return CommonReturnType.create("注册成功");
+    }
 
     /**
      * 登录
