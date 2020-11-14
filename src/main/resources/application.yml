@@ -27,3 +27,8 @@ mybatis:
   mapper-locations: classpath*:mapper/*.xml
 server:
   port: 8081
+
+#jwt秘钥
+secret: aaabbbcccdddeeefffggghhhiiijjjkkklllmmmnnnooopppqqqrrrsssttt
+#jwt过期时间
+expire-time-in-second: 1209600

@@ -7,6 +7,7 @@ import com.miaosha.usercenter.entity.UserPassword;
 import com.miaosha.usercenter.error.BusinessException;
 import com.miaosha.usercenter.error.EmBusinessError;
 import com.miaosha.usercenter.model.UserModel;
+import com.miaosha.usercenter.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -15,6 +16,9 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -43,6 +47,9 @@ public class UserService {
     @Autowired
     private DiscoveryClient discoveryClient;        //服务发现
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     /**
      * 登录
      * @param telephone 手机号
@@ -68,9 +75,14 @@ public class UserService {
             throw new BusinessException(EmBusinessError.LOGIN_ERROR);
         UserModel userModel = convertFromDataObject(userInfo, userPassword);
 
-        // 登录成功 生成token 用户信息存入redis, 过期时间1小时
-        String token = UUID.randomUUID().toString().replace("-", "");
-        redisTemplate.opsForValue().set(token, userModel, 1, TimeUnit.HOURS);
+        // 登录成功 生成jwt 返回前端
+        Map<String, Object> user = new HashMap();
+        user.put("id", userModel.getId().toString());
+        user.put("telephone", userModel.getTelephone());
+        user.put("name", userModel.getName());
+        user.put("gender", userModel.getGender().toString());
+        user.put("age", userModel.getAge().toString());
+        String token = jwtUtil.generateToken(user);
 
         return token;
     }
