@@ -1,8 +1,6 @@
 package com.miaosha.usercenter.controller;
 
-import com.miaosha.usercenter.entity.UserInfo;
 import com.miaosha.usercenter.error.BusinessException;
-import com.miaosha.usercenter.error.EmBusinessError;
 import com.miaosha.usercenter.model.UserModel;
 import com.miaosha.usercenter.response.CommonReturnType;
 import com.miaosha.usercenter.service.UserService;
