@@ -1,9 +1,11 @@
 package com.miaosha.usercenter.controller;
 
+import com.miaosha.usercenter.entity.UserInfo;
 import com.miaosha.usercenter.error.BusinessException;
 import com.miaosha.usercenter.model.UserModel;
 import com.miaosha.usercenter.response.CommonReturnType;
 import com.miaosha.usercenter.service.UserService;
+import com.miaosha.usercenter.util.JwtUtil;
 import com.miaosha.usercenter.vo.UserVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,6 +26,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @GetMapping("/get-otpCode")
     @ApiOperation("生成验证码")
@@ -66,6 +70,13 @@ public class UserController {
 
         // 返回token
         return CommonReturnType.create(token);
+    }
+
+    @ApiOperation("获取用户信息")
+    @GetMapping("/get-user-info")
+    public CommonReturnType getUserInfo(@RequestHeader("x-token") String token){
+        Integer userId = jwtUtil.getUserIdFromToken(token);
+        return CommonReturnType.create(userService.getUserInfo(userId));
     }
 
     //    ----------------------------------------------------非业务方法-------------------------------------------------------------------

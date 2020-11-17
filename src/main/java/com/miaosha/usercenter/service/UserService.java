@@ -7,6 +7,7 @@ import com.miaosha.usercenter.entity.UserPassword;
 import com.miaosha.usercenter.error.BusinessException;
 import com.miaosha.usercenter.error.EmBusinessError;
 import com.miaosha.usercenter.model.UserModel;
+import com.miaosha.usercenter.response.CommonReturnType;
 import com.miaosha.usercenter.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -16,11 +17,9 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 
@@ -135,6 +134,15 @@ public class UserService {
         userPasswordDao.insertSelective(userPassword);
     }
 
+    /**
+     * 获取用户信息(订单中心调用)
+     * @param userId
+     * @return
+     */
+    public UserInfo getUserInfo(Integer userId){
+        return userInfoDao.selectByPrimaryKey(userId);
+    }
+
 
 
 //    ----------------------------------------------------非业务方法-------------------------------------------------------------------
@@ -145,7 +153,7 @@ public class UserService {
             return null;
         UserModel userModel = new UserModel();
         BeanUtils.copyProperties(userInfo, userModel);
-        BeanUtils.copyProperties(userPassword, userModel);
+        userModel.setEncryptPassword(userPassword.getEncryptPassword());
         return userModel;
     }
 
