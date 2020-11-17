@@ -93,6 +93,17 @@
             <version>0.10.7</version>
             <scope>runtime</scope>
         </dependency>
+<!--        sentinel相关依赖-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+        </dependency>
+<!--        actuator相关依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
         <!--        测试相关依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

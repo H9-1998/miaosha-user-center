@@ -19,6 +19,9 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848   #注册中心 ip:port
+    sentinel:
+      transport:
+        dashboard: localhost:9090     #指定sentinel控制台路径
   application:
     name: user-center                 #服务名
 mybatis:
@@ -26,9 +29,17 @@ mybatis:
     map-underscore-to-camel-case: true    #驼峰命名
   mapper-locations: classpath*:mapper/*.xml
 server:
-  port: 8081
+  port: 8083
+
 
 #jwt秘钥
 secret: aaabbbcccdddeeefffggghhhiiijjjkkklllmmmnnnooopppqqqrrrsssttt
 #jwt过期时间
 expire-time-in-second: 1209600
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

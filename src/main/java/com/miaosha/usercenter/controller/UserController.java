@@ -9,6 +9,7 @@ import com.miaosha.usercenter.util.JwtUtil;
 import com.miaosha.usercenter.vo.UserVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/user")
 @Api(tags = {"用户操作类"})
+@Slf4j
 public class UserController {
 
     @Autowired
@@ -76,6 +78,7 @@ public class UserController {
     @GetMapping("/get-user-info")
     public CommonReturnType getUserInfo(@RequestHeader("x-token") String token){
         Integer userId = jwtUtil.getUserIdFromToken(token);
+        log.info("8082被调用");
         return CommonReturnType.create(userService.getUserInfo(userId));
     }
 
