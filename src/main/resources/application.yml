@@ -24,6 +24,10 @@ spring:
         dashboard: localhost:9090     #指定sentinel控制台路径
   application:
     name: user-center                 #服务名
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+#    add-mappings: false
 mybatis:
   configuration:
     map-underscore-to-camel-case: true    #驼峰命名
